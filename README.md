@@ -11,26 +11,7 @@ This program downloads space photos from the following sources: [SpaceX launches
 
 ## Examples of use
 ```python
->>>  python main.py bit.ly/3ULPH5U
-Count of clicks is 5
+>>>  python main.py
 ```
-```python
->>> python main.py https://www.yandex.ru
-https://bit.ly/3ULPH5U
-```
-```python
->>> python main.py -h            
-usage: main.py [-h] url
-
-This program accepts one required positional argument, url. If this url is a bitlink, the program returns a count of clicks on this bitlink. If the     
-url is not a bitlink, the program returns a bitlink for the submitted url.
-
-positional arguments:
-  url         Please enter a url
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-
 ## License
 This software is licensed under the MIT License - see the [LICENSE](https://github.com/vdesyatke/Dvmn-Weather/blob/master/LICENSE) file for details
