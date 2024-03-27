@@ -3,13 +3,14 @@ import requests
 import auxiliary_functions
 from environs import Env
 from datetime import date, datetime
-from urllib.parse import urlencode
+from pathlib import Path
 
 
 def download_pic(url, path, params=None):
     path_to_folder = os.path.dirname(path)
-    if not os.path.exists(path_to_folder):
-        os.makedirs(path_to_folder)
+    Path(path_to_folder).mkdir(parents=True, exist_ok=True)
+    # if not os.path.exists(path_to_folder):
+    #     os.makedirs(path_to_folder)
 
     response = requests.get(url, params=params)
     response.raise_for_status()
@@ -21,10 +22,9 @@ def download_pic(url, path, params=None):
 def fetch_apod_images(count=30):
     env = Env()
     env.read_env()
-    NASA_API_KEY = env('NASA_API_KEY')
 
     url = 'https://api.nasa.gov/planetary/apod'
-    payload = {'api_key': NASA_API_KEY, 'count': count}
+    payload = {'api_key': env('NASA_API_KEY'), 'count': count}
     response = requests.get(url, params=payload)
     response.raise_for_status()
 
@@ -42,10 +42,9 @@ def fetch_apod_images(count=30):
 def fetch_epic_images(count=10):
     env = Env()
     env.read_env()
-    NASA_API_KEY = env('NASA_API_KEY')
 
     url = 'https://api.nasa.gov/EPIC/api/natural/all'
-    payload = {'api_key': NASA_API_KEY}
+    payload = {'api_key': env('NASA_API_KEY')}
     response = requests.get(url, params=payload)
     response.raise_for_status()
     valid_dates = (x['date'] for x in response.json()[:count])
@@ -53,7 +52,6 @@ def fetch_epic_images(count=10):
     number_of_images = 0
     for dt in valid_dates:
         url = f'https://api.nasa.gov/EPIC/api/natural/{dt}'
-        print(url)
         response = requests.get(url, params=payload)
         response.raise_for_status()
 
@@ -84,8 +82,8 @@ def fetch_spacex_last_launch():
 
 
 def main():
-    # fetch_spacex_last_launch()
-    # fetch_apod_images()
+    fetch_spacex_last_launch()
+    fetch_apod_images(count=2)
     fetch_epic_images(count=2)
 
 
