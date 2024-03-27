@@ -68,21 +68,27 @@ def fetch_epic_images(count=10):
             break
 
 def fetch_spacex_last_launch():
-    url = 'https://api.spacexdata.com/v5/launches/5eb87d47ffd86e000604b38a'
+    url = 'https://api.spacexdata.com/v5/launches/latest'
     response = requests.get(url)
     response.raise_for_status()
 
     images = response.json()['links']['flickr']['original']
 
-    for image in images:
-        filename = os.path.basename(image)
-        download_pic(image, f'images/{filename}')
+    if not images:
+        url = 'https://api.spacexdata.com/v5/launches/5eb87d47ffd86e000604b38a'
+        response = requests.get(url)
+        response.raise_for_status()
+        images = response.json()['links']['flickr']['original']
+
+    for number, image in enumerate(images):
+        ext = auxiliary_functions.extract_file_extension_from_url(image)
+        download_pic(image, f'images/space_{number}{ext}')
 
 
 def main():
-    fetch_spacex_last_launch()
-    fetch_apod_images(count=2)
-    fetch_epic_images(count=2)
+    # fetch_spacex_last_launch()
+    # fetch_apod_images(count=2)
+    # fetch_epic_images(count=2)
 
 
 if __name__ == '__main__':
