@@ -2,7 +2,7 @@ import os
 import requests
 import auxiliary_functions
 from environs import Env
-from datetime import date, datetime
+from datetime import datetime
 from pathlib import Path
 
 
@@ -58,14 +58,20 @@ def fetch_epic_images(count=10):
 
         for image in response.json():
             basename = image['image']
-            url = f'https://api.nasa.gov/EPIC/archive/natural/{dt}/png/{basename}.png'
-            download_pic(url=url, path=f'images/{basename}.png', params=payload)
+            url = f'https://api.nasa.gov/EPIC/archive/natural/{dt}/png/' \
+                  f'{basename}.png'
+            download_pic(
+                url=url,
+                path=f'images/{basename}.png',
+                params=payload
+            )
             number_of_images += 1
             if number_of_images == count:
                 break
 
         if number_of_images == count:
             break
+
 
 def fetch_spacex_last_launch():
     url = 'https://api.spacexdata.com/v5/launches/latest'
@@ -86,9 +92,9 @@ def fetch_spacex_last_launch():
 
 
 def main():
-    # fetch_spacex_last_launch()
-    # fetch_apod_images(count=2)
-    # fetch_epic_images(count=2)
+    fetch_spacex_last_launch()
+    fetch_apod_images(count=2)
+    fetch_epic_images(count=2)
 
 
 if __name__ == '__main__':
