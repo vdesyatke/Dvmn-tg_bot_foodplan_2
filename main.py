@@ -9,8 +9,6 @@ from pathlib import Path
 def download_pic(url, path, params=None):
     path_to_folder = os.path.dirname(path)
     Path(path_to_folder).mkdir(parents=True, exist_ok=True)
-    # if not os.path.exists(path_to_folder):
-    #     os.makedirs(path_to_folder)
 
     response = requests.get(url, params=params)
     response.raise_for_status()
