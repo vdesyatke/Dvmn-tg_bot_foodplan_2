@@ -1,22 +1,75 @@
 import os
 import requests
+import auxiliary_functions
+from environs import Env
+from datetime import date, datetime
+from urllib.parse import urlencode
 
 
-def return_file_extension(path):
-    return os.path.basename(path).split('.')[-1]
-
-
-def download_pic(url, path):
+def download_pic(url, path, params=None):
     path_to_folder = os.path.dirname(path)
     if not os.path.exists(path_to_folder):
         os.makedirs(path_to_folder)
 
-    response = requests.get(url)
+    response = requests.get(url, params=params)
     response.raise_for_status()
 
     with open(path, 'wb') as file:
         file.write(response.content)
 
+
+def fetch_apod_images(count=30):
+    env = Env()
+    env.read_env()
+    NASA_API_KEY = env('NASA_API_KEY')
+
+    url = 'https://api.nasa.gov/planetary/apod'
+    payload = {'api_key': NASA_API_KEY, 'count': count}
+    response = requests.get(url, params=payload)
+    response.raise_for_status()
+
+    if not os.path.exists('images'):
+        os.makedirs('images')
+
+    for number, image in enumerate(response.json()):
+        if image['media_type'] == 'image':
+            url = image['url']
+            ext = auxiliary_functions.extract_file_extension_from_url(url)
+            path = f'images/nasa_apod_{number}{ext}'
+            download_pic(url=url, path=path)
+
+
+def fetch_epic_images(count=10):
+    env = Env()
+    env.read_env()
+    NASA_API_KEY = env('NASA_API_KEY')
+
+    url = 'https://api.nasa.gov/EPIC/api/natural/all'
+    payload = {'api_key': NASA_API_KEY}
+    response = requests.get(url, params=payload)
+    response.raise_for_status()
+    valid_dates = (x['date'] for x in response.json()[:count])
+
+    number_of_images = 0
+    for dt in valid_dates:
+        url = f'https://api.nasa.gov/EPIC/api/natural/{dt}'
+        print(url)
+        response = requests.get(url, params=payload)
+        response.raise_for_status()
+
+        dt = datetime.strptime(dt, '%Y-%m-%d')
+        dt = dt.strftime('%Y/%m/%d')
+
+        for image in response.json():
+            basename = image['image']
+            url = f'https://api.nasa.gov/EPIC/archive/natural/{dt}/png/{basename}.png'
+            download_pic(url=url, path=f'images/{basename}.png', params=payload)
+            number_of_images += 1
+            if number_of_images == count:
+                break
+
+        if number_of_images == count:
+            break
 
 def fetch_spacex_last_launch():
     url = 'https://api.spacexdata.com/v5/launches/5eb87d47ffd86e000604b38a'
@@ -31,9 +84,9 @@ def fetch_spacex_last_launch():
 
 
 def main():
-    # if not os.path.exists('images'):
-    #     os.makedirs('images')
     # fetch_spacex_last_launch()
+    # fetch_apod_images()
+    fetch_epic_images(count=2)
 
 
 if __name__ == '__main__':
