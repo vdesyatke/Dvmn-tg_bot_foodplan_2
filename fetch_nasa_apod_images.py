@@ -25,9 +25,6 @@ def main():
     response = requests.get(url, params=payload)
     response.raise_for_status()
 
-    if not os.path.exists('images'):
-        os.makedirs('images')
-
     for number, image in enumerate(response.json()):
         if image['media_type'] == 'image':
             url = image['url']
