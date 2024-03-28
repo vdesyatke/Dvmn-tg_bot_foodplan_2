@@ -1,22 +1,23 @@
-from auxiliary_functions import *
+from auxiliary_functions import extract_file_extension_from_url, download_pic
 import argparse
+import requests
 
 
 def create_parser():
-    description = '''Download photos of SpaceX launches'''
+    description = 'Download photos of SpaceX launches'
     parser = argparse.ArgumentParser(description=description)
     h = 'ID of launch'
     parser.add_argument('-id', '--launch_id', help=h, default='latest')
     return parser
 
 
-def is_valid_launch_id(id):
+def is_valid_launch_id(launch_id):
     """Checks if the given id is a valid SpaceX launch id"""
     url = 'https://api.spacexdata.com/v5/launches'
     response = requests.get(url)
     response.raise_for_status()
     launch_id_list = (launch['id'] for launch in response.json())
-    return id in launch_id_list
+    return launch_id in launch_id_list
 
 
 def return_id_of_latest_photographed_launch():
