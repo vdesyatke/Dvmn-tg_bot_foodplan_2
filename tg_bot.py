@@ -1,19 +1,42 @@
+import random
 from environs import Env
 import telegram
+import argparse
+import time
+import os
+
+
+def create_parser():
+    description = 'Delayed publish'
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('-d', '--hours_delay', type=float, help='Delay in hours', default=4)
+    return parser
+
+
+def publish_with_delay(bot, chat_id, delay):
+    dirpath, _, filenames = next(os.walk('images'))
+    assert filenames
+    while True:
+        for filename in filenames:
+            try:
+                bot.send_photo(chat_id=chat_id, photo=open(os.path.join(dirpath, filename), 'rb'))
+                time.sleep(delay * 3600)
+            except FileNotFoundError:
+                pass
+        random.shuffle(filenames)
 
 
 def main():
     env = Env()
     env.read_env()
 
-    bot = telegram.Bot(token=env('TG_TOKEN'))
-    # print(bot.get_me())
+    parser = create_parser()
+    delay = parser.parse_args().hours_delay
 
+    bot = telegram.Bot(token=env('TG_TOKEN'))
     chat_id = bot.get_updates()[-1].message.chat_id
 
-    # bot.send_message(chat_id=chat_id, text="Test message")
-    # bot.send_document(chat_id=chat_id, document=open('images/space_0.jpg', 'rb'))
-    bot.send_photo(chat_id=chat_id, photo=open('images/space_0.jpg', 'rb'))
+    publish_with_delay(bot=bot, chat_id=chat_id, delay=delay)
 
 
 if __name__ == '__main__':
