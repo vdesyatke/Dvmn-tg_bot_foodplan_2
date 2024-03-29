@@ -29,13 +29,11 @@ def main():
     number_of_images = 0
     for dt in valid_dates:
         url = f'https://epic.gsfc.nasa.gov/api/natural/date/{dt}'
-        print(dt)
         response = requests.get(url, params=payload)
         response.raise_for_status()
 
         dt = datetime.strptime(dt, '%Y-%m-%d')
         dt = dt.strftime('%Y/%m/%d')
-        print(dt)
 
         for image in response.json():
             basename = image['image']
