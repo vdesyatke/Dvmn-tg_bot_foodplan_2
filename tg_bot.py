@@ -14,10 +14,13 @@ def create_parser():
 
 
 def publish_with_delay(bot, chat_id, delay):
+    TG_FILESIZE_LIMIT = 20 * 1024 * 1024
     dirpath, _, filenames = next(os.walk('images'))
     assert filenames
     while True:
         for filename in filenames:
+            if os.path.getsize(os.path.join(dirpath, filename)) > TG_FILESIZE_LIMIT:
+                continue
             try:
                 bot.send_photo(chat_id=chat_id, photo=open(os.path.join(dirpath, filename), 'rb'))
                 time.sleep(delay * 3600)
