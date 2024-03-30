@@ -48,13 +48,19 @@ This will create a new folder 'images/', if not exists, in your root directory, 
 >>>  python fetch_nasa_epic_images.py -c 5
 ```
 
-### Automatically post images one by one with 1 hour delay
+### Automatically post images one by one with specified hour delay
 ```python
->>> python tg_bot.py -d 1
+>>> python tg_scheduled_photo_publish.py -d 1
 ```
-The script posts all images from the 'images/' folder with specified delay, then shuffles them and repeats.
+The script posts all images from the 'images/' folder with specified delay, then shuffles them and repeats until manually interrupted.
 The folder must be non-empty.
-Files over 20MB will be ignored.
+Files over 20MB will be ignored. Default delay is 4 hours.
+
+### Post specified or random file
+```python
+>>> python tg_photo_publish.py -f space_0.jpg
+```
+Posts specified image from the 'images/' folder. If no filename provided, posts random image from 'images/' folder. 
 
 ## License
 This software is licensed under the MIT License - see the [LICENSE](https://github.com/vdesyatke/Dvmn-Weather/blob/master/LICENSE) file for details
