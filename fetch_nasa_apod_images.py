@@ -1,4 +1,3 @@
-import os
 import requests
 from auxiliary_functions import extract_file_extension_from_url, download_pic
 from environs import Env
