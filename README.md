@@ -15,6 +15,22 @@ TG_TOKEN={your_telegram_token}
 CHAT_ID={your_chat_id}
 ```
 
+## Scripts
+### fetch_spacex_images
+Downloads photos of SpaceX launches
+
+### fetch_nasa_apod_images
+Downloads NASA APOD photos
+
+### fetch_nasa_epic_images
+Downloads NASA EPIC photos
+
+### tg_photo_publish.py
+Posts a photo to telegram channel
+
+### tg_scheduled_photo_publish.py
+Posts photos to telegram channel on schedule
+
 ## Examples of use
 
 ### Download photos of the latest photographed SpaceX launch
