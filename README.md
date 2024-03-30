@@ -1,4 +1,4 @@
-# Dvmn-Hubble
+# Dvmn-Space_photos
 This program downloads space photos from the following sources: [SpaceX launches](https://docs.spacexdata.com/), [NASA APOD](https://apod.nasa.gov/apod/), [NASA EPIC](https://epic.gsfc.nasa.gov/).
 
 ## Installation
