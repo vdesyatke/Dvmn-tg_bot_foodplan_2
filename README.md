@@ -5,14 +5,17 @@ This program downloads space photos from the following sources: [SpaceX launches
 0. You need python interpreter installed on your PС. The project is tested on Python 3.10.
 1. Clone the project to your PC, details [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 2. Install, run and activate your virtual environment, details [here](https://docs.python-guide.org/dev/virtualenvs/).
-3. To install the dependencies, simply run ```pip install -r requirements.txt```.
+3. To install the dependencies, simply run 
+```python
+pip install -r requirements.txt
+```
 4. Generate your NASA API key [here](https://api.nasa.gov/) 
 5. Follow [instructions](https://sitogon.ru/blog/252-kak-sozdat-telegram-bot-poluchit-ego-token-i-chat-id) to create a new telegram bot, generate your telegram token and retrieve Chat ID of your telegram channel.
 6. In the root directory of the project create a new file named `.env` with the environment variables:
 ```
 NASA_API_KEY={your_NASA_API_key}
 TG_TOKEN={your_telegram_token}
-CHAT_ID={your_chat_id}
+TG_CHAT_ID={your_chat_id}
 ```
 
 ## Scripts
