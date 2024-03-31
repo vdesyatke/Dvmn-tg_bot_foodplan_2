@@ -35,38 +35,38 @@ Posts photos to telegram channel on schedule
 
 ### Download photos of the latest photographed SpaceX launch
 ```python
->>>  python fetch_spacex_images.py
+python fetch_spacex_images.py
 ```
 This will create a new folder 'images/', if not exists, in your root directory, and download photos into it.
 
 ### Download photos of SpaceX launch with specific ID
 ```python
->>>  python fetch_spacex_images.py -id 6243adcaaf52800c6e919254
+python fetch_spacex_images.py -id 6243adcaaf52800c6e919254
 ```
 
 ### Download 30 (default) NASA APOD images
 ```python
->>>  python fetch_nasa_apod_images.py
+python fetch_nasa_apod_images.py
 ```
 
 ### Download specified amount of NASA APOD images
 ```python
->>>  python fetch_nasa_apod_images.py -c 10
+python fetch_nasa_apod_images.py -c 10
 ```
 
 ### Download 10 (default) NASA EPIC images
 ```python
->>>  python fetch_nasa_epic_images.py
+python fetch_nasa_epic_images.py
 ```
 
 ### Download specified amount of NASA EPIC images
 ```python
->>>  python fetch_nasa_epic_images.py -c 5
+python fetch_nasa_epic_images.py -c 5
 ```
 
 ### Automatically post images one by one with specified hour delay
 ```python
->>> python tg_scheduled_photo_publish.py -d 1
+python tg_scheduled_photo_publish.py -d 1
 ```
 The script posts all images from the 'images/' folder with specified delay, then shuffles them and repeats until manually interrupted.
 The folder must be non-empty.
@@ -74,7 +74,7 @@ Files over 20MB will be ignored. Default delay is 4 hours.
 
 ### Post specified or random file
 ```python
->>> python tg_photo_publish.py -f space_0.jpg
+python tg_photo_publish.py -f space_0.jpg
 ```
 Posts specified image from the 'images/' folder. If no filename provided, posts random image from 'images/' folder. 
 

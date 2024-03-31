@@ -25,11 +25,12 @@ def main():
     response.raise_for_status()
 
     for number, image in enumerate(response.json()):
-        if image['media_type'] == 'image':
-            url = image['url']
-            ext = extract_file_extension_from_url(url)
-            path = f'images/nasa_apod_{number}{ext}'
-            download_pic(url=url, path=path)
+        if image['media_type'] != 'image':
+            continue
+        url = image['url']
+        ext = extract_file_extension_from_url(url)
+        path = f'images/nasa_apod_{number}{ext}'
+        download_pic(url=url, path=path)
 
 
 if __name__ == '__main__':

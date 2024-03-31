@@ -16,8 +16,8 @@ def is_valid_launch_id(launch_id):
     url = 'https://api.spacexdata.com/v5/launches'
     response = requests.get(url)
     response.raise_for_status()
-    launch_id_list = (launch['id'] for launch in response.json())
-    return launch_id in launch_id_list
+    launch_ids = (launch['id'] for launch in response.json())
+    return launch_id in launch_ids
 
 
 def return_id_of_latest_photographed_launch():

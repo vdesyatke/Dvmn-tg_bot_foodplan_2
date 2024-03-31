@@ -5,28 +5,24 @@ import argparse
 import os
 
 
+TG_FILESIZE_LIMIT = 20 * 1024 * 1024
+
+
 def create_parser():
     description = 'Publish photo'
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('-f', '--filename', type=str, help='filename to publish')
+    help = 'filename to publish'
+    parser.add_argument('-f', '--filename', type=str, help=help)
     return parser
 
 
 def publish_photo(bot, chat_id, filename):
-    """Posts specified photo from folder 'images' to telegram channel"""
-    TG_FILESIZE_LIMIT = 20 * 1024 * 1024
-    try:
-        if os.path.getsize(
-                os.path.join('images/', filename)
-        ) > TG_FILESIZE_LIMIT:
-            print('File is too heavy. Only files less than 20MB are accepted')
-        else:
-            bot.send_photo(
-                chat_id=chat_id,
-                photo=open(os.path.join('images/', filename), 'rb')
-            )
-    except FileNotFoundError:
-        print(f'File {filename} not found in "images/" folder')
+    """Posts specified photo from 'images' folder to telegram channel"""
+    file = os.path.join('images/', filename)
+    if os.path.getsize(file) > TG_FILESIZE_LIMIT:
+        print('File is too heavy. Only files less than 20MB are accepted')
+        return
+    bot.send_photo(chat_id=chat_id, photo=open(file, 'rb'))
 
 
 def main():
@@ -43,7 +39,11 @@ def main():
         filename = random.choice(
             tuple(os.walk('images'))[0][2]
         )
-    publish_photo(bot=bot, chat_id=chat_id, filename=filename)
+
+    try:
+        publish_photo(bot=bot, chat_id=chat_id, filename=filename)
+    except FileNotFoundError:
+        print(f'File {filename} not found in "images/" folder')
 
 
 if __name__ == '__main__':

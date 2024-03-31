@@ -27,18 +27,18 @@ def main():
     valid_dates = (x['date'] for x in response.json())
 
     number_of_images = 0
-    for dt in valid_dates:
-        url = f'https://epic.gsfc.nasa.gov/api/natural/date/{dt}'
+    for valid_date in valid_dates:
+        url = f'https://epic.gsfc.nasa.gov/api/natural/date/{valid_date}'
         response = requests.get(url, params=payload)
         response.raise_for_status()
 
-        dt = datetime.strptime(dt, '%Y-%m-%d')
-        dt = dt.strftime('%Y/%m/%d')
+        valid_date = datetime.strptime(valid_date, '%Y-%m-%d')
+        valid_date = valid_date.strftime('%Y/%m/%d')
 
         for image in response.json():
             basename = image['image']
-            url = f'https://epic.gsfc.nasa.gov/archive/natural/{dt}/png/' \
-                  f'{basename}.png'
+            url = f'https://epic.gsfc.nasa.gov/archive/natural/{valid_date}' \
+                  f'/png/{basename}.png'
             try:
                 download_pic(
                     url=url,
