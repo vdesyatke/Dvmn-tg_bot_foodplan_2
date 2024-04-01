@@ -27,10 +27,9 @@ def publish_with_delay(bot, chat_id, delay):
             file = os.path.join(dirpath, filename)
             if os.path.getsize(file) > TG_FILESIZE_LIMIT:
                 continue
-            with suppress(FileNotFoundError):
-                with open(file, 'rb') as photo:
-                    bot.send_photo(chat_id=chat_id, photo=open(file, 'rb'))
-                    time.sleep(delay * 3600)
+            with suppress(FileNotFoundError), open(file, 'rb') as photo:
+                bot.send_photo(chat_id=chat_id, photo=open(file, 'rb'))
+                time.sleep(delay * 3600)
         random.shuffle(filenames)
 
 
