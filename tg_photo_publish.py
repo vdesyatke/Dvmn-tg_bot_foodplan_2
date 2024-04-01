@@ -22,7 +22,8 @@ def publish_photo(bot, chat_id, filename):
     if os.path.getsize(file) > TG_FILESIZE_LIMIT:
         print('File is too heavy. Only files less than 20MB are accepted')
         return
-    bot.send_photo(chat_id=chat_id, photo=open(file, 'rb'))
+    with open(file, 'rb') as photo:
+        bot.send_photo(chat_id=chat_id, photo=photo)
 
 
 def main():
