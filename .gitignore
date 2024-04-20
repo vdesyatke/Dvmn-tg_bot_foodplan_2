@@ -1,5 +1,5 @@
-.env
+recipes/.env
 images/
 __pycache__/
 .idea/
-test.py
+recipes/test.py

@@ -5,10 +5,10 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import os
 import django
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "recipes.recipes.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "recipes.settings")
 django.setup()
 
-from recipes.dishes import models
+from dishes import models # noqa E402
 
 
 # Функция для получения случайного блюда
@@ -17,7 +17,7 @@ def get_random_dish():
     return random_dish
 
 
-def publish_recipe(bot, chat_id, dish):
+def publish_recipe(query, chat_id, dish):
     """Опубликовать рецепт
 
     Публикует в таком порядке:
@@ -27,20 +27,15 @@ def publish_recipe(bot, chat_id, dish):
     - рецепт
     - список ингредиентов
     """
-    bot.send_message(chat_id=chat_id, message=dish.name)
-    bot.send_message(chat_id=chat_id,
-                     message=f'Время приготовления {dish.cooktime} мин'
+    query.bot.send_message(chat_id=chat_id, text=dish.name)
+    query.bot.send_message(chat_id=chat_id, text='Запускаю publish...')
+    query.bot.send_message(chat_id=chat_id,
+                     text=f'Время приготовления {dish.cooktime} мин'
                      )
-    with open(dish.image, 'rb') as photo:
-        bot.send_photo(chat_id=chat_id, photo=photo)
-    bot.send_message(chat_id=chat_id, message=dish.ingredients)
-    bot.send_message(chat_id=chat_id, message=dish.recipe)
-    # file = os.path.join('images/', filename)
-    # if os.path.getsize(file) > TG_FILESIZE_LIMIT:
-    #     print('File is too heavy. Only files less than 20MB are accepted')
-    #     return
-    # with open(file, 'rb') as photo:
-    #     bot.send_photo(chat_id=chat_id, photo=photo)
+    with open(dish.images, 'rb') as photo:
+        query.bot.send_photo(chat_id=chat_id, photo=photo)
+    query.bot.send_message(chat_id=chat_id, text=f'Ингредиенты:{dish.ingredients}')
+    query.bot.send_message(chat_id=chat_id, text=f'Рецепт: + {dish.recipe}')
 
 
 def start(update, context):
@@ -58,11 +53,22 @@ def button(update, context):
     query.answer()
 
     if query.data == 'random':
-        # query.edit_message_text(text="You chose: Random")
         dish = get_random_dish()
         if dish:
+            chat_id = query.message.chat_id
             query.edit_message_text(text=dish.name)
-            query.bot.send_photo(chat_id=query.message.chat_id, photo=dish.image)
+            query.bot.send_message(chat_id=chat_id,
+                                   text=f'Время приготовления {dish.cooktime} мин'
+                                   )
+            query.bot.send_photo(chat_id=chat_id, photo=dish.images)
+            query.bot.send_message(chat_id=chat_id, text=f'Ингредиенты:\n{dish.ingredients}')
+            query.bot.send_message(chat_id=chat_id, text=f'Рецепт:\n{dish.recipe}')
+
+            # publish_recipe(query=query, chat_id=query.message.chat_id, dish=dish)
+            # query.edit_message_text(text=dish.name)
+            # query.bot.send_photo(chat_id=query.message.chat_id, photo=dish.images)
+            # query.bot.send_message(chat_id=query.message.chat_id, text=dish.cooktime)
+
         else:
             query.edit_message_text(text="No random dish available")
     elif query.data == 'another':
@@ -73,9 +79,6 @@ def main():
     env = Env()
     env.read_env()
 
-    bot = telegram.Bot(token=env('TG_TOKEN'))
-    chat_id = env('TG_CHAT_ID')
-
     updater = Updater(env('TG_TOKEN'), use_context=True)
     dp = updater.dispatcher
 
@@ -84,11 +87,6 @@ def main():
 
     updater.start_polling()
     updater.idle()
-
-    # try:
-    #     publish_photo(bot=bot, chat_id=chat_id, filename=filename)
-    # except FileNotFoundError:
-    #     print(f'File {filename} not found in "images/" folder')
 
 
 if __name__ == '__main__':
